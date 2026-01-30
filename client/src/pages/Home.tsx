@@ -3,6 +3,7 @@ import { GlitchButton } from "@/components/GlitchButton";
 import { Link } from "wouter";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial, Sphere } from "@react-three/drei";
+import { MapPin } from "lucide-react";
 
 function HeroSphere() {
   useFrame((state) => {
@@ -45,26 +46,38 @@ export default function Home() {
         >
           <h1 
             className="text-6xl md:text-9xl font-display font-black text-transparent text-stroke-2 md:text-stroke-2 stroke-white mb-4 glitch-text"
-            data-text="DEVELOPER"
+            data-text="JEEVAN H"
           >
-            DEVELOPER
+            JEEVAN H
           </h1>
           <h1 
-            className="text-6xl md:text-9xl font-display font-black text-white mix-blend-difference glitch-text"
-            data-text="DESIGNER"
+            className="text-4xl md:text-7xl font-display font-black text-white mix-blend-difference glitch-text"
+            data-text="AI&ML ENGINEER"
           >
-            DESIGNER
+            AI&ML ENGINEER
           </h1>
+          
+          {/* Location */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="flex items-center justify-center gap-2 mt-6"
+          >
+            <MapPin className="w-5 h-5 text-secondary" />
+            <span className="font-mono text-secondary text-lg md:text-xl tracking-wider">
+              PIRIYAPATNA (MYSORE)
+            </span>
+          </motion.div>
         </motion.div>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-primary font-mono text-lg md:text-2xl mb-12 max-w-2xl mx-auto border-l-2 border-primary pl-6 text-left"
+          className="text-primary font-mono text-lg md:text-2xl mb-12 max-w-3xl mx-auto border-l-2 border-primary pl-6 text-left"
         >
-          Building digital experiences for the post-internet age. 
-          Specializing in React, WebGL, and Maximalist UI.
+          Passionate about building next-gen AI architectures, blending state-of-the-art Deep Learning research with robust production engineering to solve previously unsolved problems.
         </motion.p>
 
         <motion.div
@@ -84,22 +97,16 @@ export default function Home() {
 
       {/* Marquee Footer */}
       <div className="absolute bottom-24 left-0 w-full overflow-hidden bg-white/5 border-y border-white/10 py-2">
-        <div className="animate-marquee whitespace-nowrap flex gap-8 text-xs font-mono text-accent">
-          {Array(20).fill("REACT • THREE.JS • TYPESCRIPT • NEXT.JS • TAILWIND • WEBGL • ").map((text, i) => (
+        <motion.div 
+          className="whitespace-nowrap flex gap-8 text-xs font-mono text-accent"
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+        >
+          {Array(20).fill("PYTORCH • TENSORFLOW • LANGCHAIN • HUGGING FACE • OPENAI • AWS • DOCKER • KUBERNETES • ").map((text, i) => (
             <span key={i}>{text}</span>
           ))}
-        </div>
+        </motion.div>
       </div>
-      
-      <style jsx>{`
-        .animate-marquee {
-          animation: marquee 20s linear infinite;
-        }
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
     </div>
   );
 }
