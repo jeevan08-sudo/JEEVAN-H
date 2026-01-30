@@ -1,52 +1,55 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api, type GuestbookEntryInput } from "@shared/routes";
 import { useGuestbook, useCreateGuestbookEntry } from "@/hooks/use-guestbook";
 import { GlitchButton } from "@/components/GlitchButton";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, Phone, Mail, MapPin, Github, Linkedin, Twitter } from "lucide-react";
+import { Loader2, Phone, Mail, MapPin, Github, Linkedin, Twitter, Send, MessageSquare } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-// Sticker Component
+// Sticker Component with enhanced design
 function Sticker({ data, index }: { data: any, index: number }) {
-  const rotation = Math.random() * 20 - 10;
+  const rotation = Math.random() * 16 - 8;
   
   return (
     <motion.div
-      initial={{ scale: 0, rotate: 0 }}
-      animate={{ scale: 1, rotate: rotation }}
-      className="bg-zinc-900 border-2 border-white/20 p-4 max-w-[250px] shadow-lg relative group hover:z-50 hover:scale-110 transition-all duration-200"
+      initial={{ scale: 0, rotate: 0, opacity: 0 }}
+      animate={{ scale: 1, rotate: rotation, opacity: 1 }}
+      transition={{ delay: index * 0.05 }}
+      whileHover={{ scale: 1.1, rotate: 0, zIndex: 50 }}
+      className="bg-black/80 backdrop-blur-sm border-2 p-4 max-w-[220px] shadow-xl relative group cursor-pointer"
       style={{
         borderColor: data.color,
-        boxShadow: `4px 4px 0px ${data.color}`,
+        boxShadow: `4px 4px 0px ${data.color}, 0 0 20px ${data.color}20`,
       }}
     >
-      <div className="font-display text-lg font-bold mb-2 uppercase break-words" style={{ color: data.color }}>
+      <div className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-white/20 group-hover:bg-white/40 transition-colors" />
+      <div className="font-display text-base font-bold mb-2 uppercase break-words tracking-wide" style={{ color: data.color }}>
         {data.name}
       </div>
       <div className="font-mono text-xs text-white/80 break-words leading-relaxed">
         {data.message}
       </div>
-      <div className="absolute -top-2 -right-2 bg-white text-black text-[10px] font-bold px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute -bottom-1 -right-1 bg-black text-[10px] font-mono px-1.5 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity border" style={{ borderColor: data.color, color: data.color }}>
         #{data.id}
       </div>
     </motion.div>
   );
 }
 
-// Contact Info Card
+// Contact Info Card with enhanced styling
 function ContactInfoCard({ icon: Icon, label, value, href }: { icon: any, label: string, value: string, href?: string }) {
   const content = (
     <motion.div
-      whileHover={{ scale: 1.02 }}
-      className="flex items-center gap-4 p-4 bg-white/5 border border-white/10 hover:border-primary/50 transition-all cursor-pointer group"
+      whileHover={{ scale: 1.02, y: -2 }}
+      className="flex items-center gap-4 p-5 bg-black/40 backdrop-blur-sm border border-white/10 hover:border-primary/50 transition-all cursor-pointer group relative overflow-hidden"
     >
-      <div className="p-3 bg-primary/10 group-hover:bg-primary/20 transition-colors">
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="p-3 bg-primary/10 border border-primary/30 group-hover:bg-primary/20 transition-all relative z-10">
         <Icon className="w-5 h-5 text-primary" />
       </div>
-      <div>
-        <div className="text-xs font-mono text-muted-foreground mb-1">{label}</div>
+      <div className="relative z-10">
+        <div className="text-xs font-mono text-accent mb-1">{label}</div>
         <div className="font-mono text-white text-sm">{value}</div>
       </div>
     </motion.div>
@@ -68,7 +71,7 @@ export default function Contact() {
     defaultValues: {
       name: "",
       message: "",
-      color: "#00FF00",
+      color: "#CCFF00",
       stickerId: "basic",
     },
   });
@@ -93,14 +96,25 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pt-28 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-28 pb-24 px-6 md:px-12 max-w-7xl mx-auto relative cyber-grid">
+      {/* Background Effects */}
+      <div className="absolute top-1/3 left-0 w-96 h-96 bg-primary/10 rounded-full blur-[150px]" />
+      <div className="absolute bottom-1/3 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-[150px]" />
       
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-16"
+        className="text-center mb-16 relative z-10"
       >
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="inline-block mb-4"
+        >
+          <Send className="w-12 h-12 text-primary mx-auto" />
+        </motion.div>
         <h2 className="text-5xl md:text-8xl font-display text-transparent text-stroke-1 stroke-white/50 mb-4">
           CONNECT
         </h2>
@@ -114,19 +128,19 @@ export default function Contact() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16"
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12 relative z-10"
       >
         <ContactInfoCard 
           icon={Phone} 
           label="PHONE_NUMBER" 
-          value="+91 XXXX-XXXX-XX"
-          href="tel:+91XXXXXXXXXX"
+          value="+91 9731463719"
+          href="tel:+919731463719"
         />
         <ContactInfoCard 
           icon={Mail} 
           label="EMAIL_ADDRESS" 
-          value="jeevan.h@example.com"
-          href="mailto:jeevan.h@example.com"
+          value="0908jeevan@gmail.com"
+          href="mailto:0908jeevan@gmail.com"
         />
         <ContactInfoCard 
           icon={MapPin} 
@@ -140,43 +154,60 @@ export default function Contact() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="flex justify-center gap-4 mb-16"
+        className="flex justify-center gap-4 mb-16 relative z-10"
       >
         {[
-          { icon: Github, href: "#", label: "GitHub" },
-          { icon: Linkedin, href: "#", label: "LinkedIn" },
-          { icon: Twitter, href: "#", label: "Twitter" },
+          { icon: Github, href: "#", label: "GitHub", color: "#CCFF00" },
+          { icon: Linkedin, href: "#", label: "LinkedIn", color: "#00F0FF" },
+          { icon: Twitter, href: "#", label: "Twitter", color: "#FF0099" },
         ].map((social) => (
-          <a
+          <motion.a
             key={social.label}
             href={social.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-4 border border-white/20 hover:border-secondary hover:bg-secondary/10 transition-all group"
+            whileHover={{ scale: 1.1, y: -3 }}
+            className="p-4 border border-white/20 bg-black/40 backdrop-blur-sm transition-all group"
+            style={{ 
+              ['--hover-color' as any]: social.color,
+            }}
             data-testid={`link-${social.label.toLowerCase()}`}
           >
-            <social.icon className="w-6 h-6 text-white/60 group-hover:text-secondary transition-colors" />
-          </a>
+            <social.icon 
+              className="w-6 h-6 text-white/60 group-hover:text-[var(--hover-color)] transition-colors" 
+            />
+          </motion.a>
         ))}
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 relative z-10">
         {/* Left: Form */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <h3 className="text-4xl md:text-5xl font-display mb-8">
-            SIGN<br/><span className="text-primary">THE_VOID</span>
-          </h3>
+          <div className="flex items-center gap-3 mb-8">
+            <MessageSquare className="w-8 h-8 text-primary" />
+            <h3 className="text-3xl md:text-4xl font-display">
+              SIGN<span className="text-primary">_THE_VOID</span>
+            </h3>
+          </div>
           
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 bg-white/5 p-8 border border-white/10 backdrop-blur-sm">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 bg-black/40 backdrop-blur-sm p-8 border border-white/10 relative">
+            {/* Corner decorations */}
+            <div className="absolute top-0 left-0 w-6 h-6 border-l-2 border-t-2 border-primary/50" />
+            <div className="absolute top-0 right-0 w-6 h-6 border-r-2 border-t-2 border-primary/50" />
+            <div className="absolute bottom-0 left-0 w-6 h-6 border-l-2 border-b-2 border-primary/50" />
+            <div className="absolute bottom-0 right-0 w-6 h-6 border-r-2 border-b-2 border-primary/50" />
+            
             <div className="space-y-2">
-              <label className="font-mono text-accent text-xs">IDENTIFIER (NAME)</label>
+              <label className="font-mono text-accent text-xs flex items-center gap-2">
+                <span className="w-2 h-2 bg-primary" /> IDENTIFIER (NAME)
+              </label>
               <input
                 {...form.register("name")}
-                className="w-full bg-black/50 border-2 border-white/20 p-4 font-mono text-white focus:border-primary focus:outline-none focus:shadow-[0_0_15px_rgba(0,255,0,0.3)] transition-all"
+                className="w-full bg-black/50 border-2 border-white/20 p-4 font-mono text-white focus:border-primary focus:outline-none focus:shadow-[0_0_20px_rgba(204,255,0,0.2)] transition-all"
                 placeholder="GUEST_USER_01"
                 data-testid="input-name"
               />
@@ -186,11 +217,13 @@ export default function Contact() {
             </div>
 
             <div className="space-y-2">
-              <label className="font-mono text-accent text-xs">DATA_PACKET (MESSAGE)</label>
+              <label className="font-mono text-accent text-xs flex items-center gap-2">
+                <span className="w-2 h-2 bg-secondary" /> DATA_PACKET (MESSAGE)
+              </label>
               <textarea
                 {...form.register("message")}
                 rows={4}
-                className="w-full bg-black/50 border-2 border-white/20 p-4 font-mono text-white focus:border-primary focus:outline-none focus:shadow-[0_0_15px_rgba(0,255,0,0.3)] transition-all"
+                className="w-full bg-black/50 border-2 border-white/20 p-4 font-mono text-white focus:border-primary focus:outline-none focus:shadow-[0_0_20px_rgba(204,255,0,0.2)] transition-all resize-none"
                 placeholder="Write something..."
                 data-testid="input-message"
               />
@@ -200,14 +233,18 @@ export default function Contact() {
             </div>
 
             <div className="space-y-2">
-              <label className="font-mono text-accent text-xs">HEX_CODE (COLOR)</label>
+              <label className="font-mono text-accent text-xs flex items-center gap-2">
+                <span className="w-2 h-2 bg-accent" /> HEX_CODE (COLOR)
+              </label>
               <div className="flex gap-4 items-center">
-                <input
-                  type="color"
-                  {...form.register("color")}
-                  className="h-12 w-12 bg-transparent border-0 cursor-pointer"
-                  data-testid="input-color"
-                />
+                <div className="relative">
+                  <input
+                    type="color"
+                    {...form.register("color")}
+                    className="h-12 w-12 bg-transparent border-2 border-white/20 cursor-pointer"
+                    data-testid="input-color"
+                  />
+                </div>
                 <span className="font-mono text-xs text-muted-foreground">SELECT YOUR FREQUENCY</span>
               </div>
             </div>
@@ -219,10 +256,14 @@ export default function Contact() {
               data-testid="button-submit"
             >
               {createMutation.isPending ? (
-                <span className="flex items-center gap-2">
-                  <Loader2 className="animate-spin" /> PROCESSING...
+                <span className="flex items-center gap-2 justify-center">
+                  <Loader2 className="animate-spin w-5 h-5" /> PROCESSING...
                 </span>
-              ) : "TRANSMIT_DATA"}
+              ) : (
+                <span className="flex items-center gap-2 justify-center">
+                  <Send className="w-5 h-5" /> TRANSMIT_DATA
+                </span>
+              )}
             </GlitchButton>
           </form>
         </motion.div>
@@ -232,20 +273,33 @@ export default function Contact() {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
-          className="relative border-2 border-white/10 bg-black/40 p-6 min-h-[600px] overflow-hidden"
+          className="relative border border-white/10 bg-black/40 backdrop-blur-sm p-6 min-h-[600px] overflow-hidden"
         >
-          <div className="absolute top-0 left-0 w-full h-8 bg-white/10 flex items-center px-4 gap-2 border-b border-white/10">
-            <div className="w-3 h-3 rounded-full bg-red-500" />
-            <div className="w-3 h-3 rounded-full bg-yellow-500" />
-            <div className="w-3 h-3 rounded-full bg-green-500" />
-            <div className="ml-auto font-mono text-[10px] text-white/50">GUESTBOOK.LOG</div>
+          {/* Terminal Header */}
+          <div className="absolute top-0 left-0 w-full h-10 bg-black/80 flex items-center px-4 gap-2 border-b border-white/10">
+            <div className="flex gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500/80" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+              <div className="w-3 h-3 rounded-full bg-green-500/80" />
+            </div>
+            <div className="ml-4 font-mono text-[10px] text-white/50">GUESTBOOK.LOG // {entries?.length || 0} ENTRIES</div>
+            <div className="ml-auto flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              <span className="font-mono text-[10px] text-green-500">LIVE</span>
+            </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-4 content-start h-full overflow-y-auto custom-scrollbar p-4">
+          <div className="mt-12 flex flex-wrap gap-4 content-start h-[calc(100%-60px)] overflow-y-auto custom-scrollbar p-2">
             {isLoading ? (
-              <div className="text-accent font-mono animate-pulse">LOADING_DATABASE...</div>
+              <div className="text-accent font-mono animate-pulse flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" /> LOADING_DATABASE...
+              </div>
             ) : entries?.length === 0 ? (
-              <div className="text-white/30 font-mono">NO_ENTRIES_FOUND</div>
+              <div className="text-white/30 font-mono text-center w-full py-12">
+                <MessageSquare className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                NO_ENTRIES_FOUND<br/>
+                <span className="text-xs">Be the first to sign the void!</span>
+              </div>
             ) : (
               <AnimatePresence>
                 {entries?.map((entry, idx) => (
@@ -256,7 +310,6 @@ export default function Contact() {
           </div>
         </motion.div>
       </div>
-
     </div>
   );
 }
