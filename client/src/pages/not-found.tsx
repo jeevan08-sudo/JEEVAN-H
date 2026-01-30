@@ -1,21 +1,25 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { AlertCircle } from "lucide-react";
+import { Link } from "wouter";
+import { GlitchButton } from "@/components/GlitchButton";
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gray-50">
-      <Card className="w-full max-w-md mx-4">
-        <CardContent className="pt-6">
-          <div className="flex mb-4 gap-2">
-            <AlertCircle className="h-8 w-8 text-red-500" />
-            <h1 className="text-2xl font-bold text-gray-900">404 Page Not Found</h1>
-          </div>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background text-foreground text-center p-4">
+      <h1 className="text-9xl font-display font-black text-primary glitch-text" data-text="404">
+        404
+      </h1>
+      <p className="text-xl font-mono text-accent mb-8 mt-4">
+        FATAL ERROR: SECTOR NOT FOUND
+      </p>
+      
+      <div className="border border-white/10 p-4 font-mono text-xs text-left text-muted-foreground mb-8 bg-black/50 max-w-md w-full">
+        <p>{">"} Searching database...</p>
+        <p>{">"} Error: Path does not exist in current timeline.</p>
+        <p>{">"} Suggested action: Return to base.</p>
+      </div>
 
-          <p className="mt-4 text-sm text-gray-600">
-            Did you forget to add the page to the router?
-          </p>
-        </CardContent>
-      </Card>
+      <Link href="/">
+        <GlitchButton variant="secondary">RETURN_HOME</GlitchButton>
+      </Link>
     </div>
   );
 }
